@@ -1,0 +1,9 @@
+ui
+*.jpeg
+.DS_Store
+*.swp
+__pycache__
+test
+venv
+*.psd
+.idea

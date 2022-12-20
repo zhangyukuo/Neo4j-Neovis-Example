@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body {
+            font: 16pt arial;
+        }
+
+        #viz {
+            width: 1600px;
+            height: 600px;
+            border: 1px solid lightgray;
+            font: 22pt arial;
+        }
+
+    </style>
+
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="../static/neovis.js"></script>
+
+
+
+
+    <script type="text/javascript">
+		// define config car
+		// instantiate nodevis object
+		// draw
+
+		var viz;
+
+		function draw() {
+			var config = {
+				container_id: "viz",
+				server_url: "bolt://127.0.0.1:7687",
+				server_user: "neo4j",
+				server_password: "admin",
+				labels: {
+					"Disease": {
+						"caption": "name",
+						"font": {
+                            "size":26,
+                            "color":"#000000"
+                                                 },
+
+                        //"title_properties": [
+                        //    "nick_name",
+                        //    "points"
+                        //                ],
+                        //"image": 'https://visjs.org/images/visjs_logo.png',
+						//"community": "community"
+						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+					},
+					 "Drug": {
+						"caption": "name",
+						"font": {
+                            "size":36,
+                            "color":"#000000"},
+                        //"title_properties": ["desc"],
+                        "community": "community"
+                                                 },
+
+				},
+				relationships: {
+					"recommand_drug": {
+						"thickness": "1",
+						"caption": false
+					},
+				},
+				arrows: false,
+				hierarchical: false,
+				initial_cypher: "MATCH p=()-[r:recommand_drug]->() RETURN p LIMIT 60"
+
+			};
+
+			viz = new NeoVis.default(config);
+			viz.render();
+			console.log(viz);
+
+		}
+    </script>
+</head>
+<body onload="draw()">
+<div id="viz"></div>
+
+
+Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
+<input type="submit" value="Submit" id="reload">
+<input type="submit" value="Stabilize" id="stabilize">
+
+
+</body>
+
+<script>
+	$("#reload").click(function() {
+
+		var cypher = $("#cypher").val();
+
+		if (cypher.length > 3) {
+			viz.renderWithCypher(cypher);
+		} else {
+			console.log("reload");
+			viz.reload();
+
+		}
+
+	});
+
+	$("#stabilize").click(function() {
+		viz.stabilize();
+	})
+
+</script>
+</html>
